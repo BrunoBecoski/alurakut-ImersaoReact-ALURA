@@ -22,6 +22,28 @@ function ProfileSideBar(propriedade) {
   )
 }
 
+function ProfileRelationsBox(propriedades) {
+  return (
+    <ProfileRelationsBoxWrapper>
+      <h2 className="smallTitle">
+        {propriedades.title} ({propriedades.items.length})
+      </h2>
+      <ul>
+        {propriedades.items.map((itemAtual) => {
+          return (
+            <li key={itemAtual.id}>
+              <a href={`/users/${itemAtual.title}`} key={itemAtual.title}>
+                <img src={itemAtual.avatar_url} />
+                <span>{itemAtual.login}</span>
+              </a>
+            </li>
+          )
+        })}
+      </ul>
+    </ProfileRelationsBoxWrapper>
+  )
+}
+
 export default function Home() {
   const [comunidades ,setComunidades] = React.useState([{
     id: '12802378123789378912789789123896123',
@@ -37,6 +59,18 @@ export default function Home() {
     'marcobrunodev',
     'felipefialho',
   ];
+  const [seguidores, setSeguidores] = React.useState([]);
+  
+  React.useEffect(function() {
+    fetch('https://api.github.com/users/brunobecoski/followers')
+      .then(function (respostaDoServidor){
+        return respostaDoServidor.json();
+      })
+      .then(function(respostaCompleta) {
+        setSeguidores(respostaCompleta);
+      })
+  }, []);
+
 
   return (
     <>
@@ -93,9 +127,12 @@ export default function Home() {
           </Box>
         </div>
         <div className="profileRelationsArea" style={{gridArea: 'profileRelationsArea'}}>
+
+          <ProfileRelationsBox title="Seguidores" items={seguidores}/>
+
           <ProfileRelationsBoxWrapper>
             <h2 className="smallTitle">
-              Comunidade ({comunidades.length})
+              Comunidades ({comunidades.length})
             </h2>
 
             <ul>
