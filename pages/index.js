@@ -1,4 +1,6 @@
 import React from 'react';
+import nookies from 'nookies';
+import jwt from 'jsonwebtoken';
 import MainGrid from '../src/components/MainGrid';
 import Box from '../src/components/Box';
 import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
@@ -29,7 +31,7 @@ function ProfileRelationsBox(propriedades) {
         {propriedades.title} ({propriedades.items.length})
       </h2>
       <ul>
-        {propriedades.items.map((itemAtual) => {
+        {/* {propriedades.items.map((itemAtual) => {
           return (
             <li key={itemAtual.id}>
               <a href={`/users/${itemAtual.title}`} key={itemAtual.title}>
@@ -38,15 +40,15 @@ function ProfileRelationsBox(propriedades) {
               </a>
             </li>
           )
-        })}
+        })} */}
       </ul>
     </ProfileRelationsBoxWrapper>
   )
 }
 
-export default function Home() {
+export default function Home(props) {
   const [comunidades ,setComunidades] = React.useState([])
-  const usuarioAleatorio = 'brunobecoski';
+  const usuarioAleatorio = props.githubUser;
   const pessoasFavoritas = [
     'juunegreiros', 
     'omariosouto', 
@@ -58,15 +60,13 @@ export default function Home() {
   const [seguidores, setSeguidores] = React.useState([]);
   
   React.useEffect(function() {
-    fetch('https://api.github.com/users/brunobecoski/followers')
+    fetch(`https://api.github.com/users/${props.githubUser}/followers`)
       .then(function (respostaDoServidor){
         return respostaDoServidor.json();
       })
       .then(function(respostaCompleta) {
         setSeguidores(respostaCompleta);
       });
-
-      console.log(process.env.NEXT_PUBLIC_DATOCMS_READ_ONLY_TOKEN)
 
       // API GraphQL 
       fetch('https://graphql.datocms.com/', {
@@ -129,7 +129,6 @@ export default function Home() {
               })
               .then(async (response) => {
                 const dados = await response.json();
-                console.log(dados.registroCriado);
                 const comunidade = dados.registroCriado;
                 const comunidadesAtualizadas = [...comunidades, comunidade];
                 setComunidades(comunidadesAtualizadas)
@@ -203,4 +202,31 @@ export default function Home() {
       </MainGrid>
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const cookies = nookies.get(context);
+  const token = cookies.USER_TOKEN;
+  const { isAuthenticated } = await fetch('http://localhost:3000/api/auth', {
+    headers: {
+      Authorization: token
+    }
+  })
+  .then((response) => response.json())
+  
+  if(!isAuthenticated) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      }
+    }
+  }
+  
+  const { githubUser } = jwt.decode(token);
+  return {
+    props: {
+      githubUser
+    },
+  }
 }
