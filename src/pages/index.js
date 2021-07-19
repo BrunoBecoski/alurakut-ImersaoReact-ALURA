@@ -1,10 +1,10 @@
 import React from 'react';
 import nookies from 'nookies';
 import jwt from 'jsonwebtoken';
-import MainGrid from '../src/components/MainGrid';
-import Box from '../src/components/Box';
-import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../src/lib/AlurakutCommons';
-import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRelations';
+import MainGrid from '../components/MainGrid';
+import Box from '../components/Box';
+import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../lib/AlurakutCommons';
+import { ProfileRelationsBoxWrapper } from '../components/ProfileRelations';
 
 function ProfileSideBar(propriedade) {
   return (
@@ -31,7 +31,7 @@ function ProfileRelationsBox(propriedades) {
         {propriedades.title} ({propriedades.items.length})
       </h2>
       <ul>
-        {/* {propriedades.items.map((itemAtual) => {
+        {propriedades.items.map((itemAtual) => {
           return (
             <li key={itemAtual.id}>
               <a href={`/users/${itemAtual.title}`} key={itemAtual.title}>
@@ -40,7 +40,7 @@ function ProfileRelationsBox(propriedades) {
               </a>
             </li>
           )
-        })} */}
+        })}
       </ul>
     </ProfileRelationsBoxWrapper>
   )
