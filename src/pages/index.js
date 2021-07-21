@@ -1,34 +1,20 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import nookies from 'nookies';
 import jwt from 'jsonwebtoken';
 import MainGrid from '../components/MainGrid';
 import Box from '../components/Box';
-import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet } from '../lib/AlurakutCommons';
+import { OrkutNostalgicIconSet } from '../lib/AlurakutCommons';
 import { ProfileRelationsBoxWrapper } from '../components/ProfileRelations';
 
-function ProfileSideBar(propriedade) {
-  return (
-    <Box as="aside"  >
-      <img src={`https://github.com/${propriedade.githubUser}.png`} style={{ borderRadius: '8px'}} />
-      <hr />
-  
-      <p>
-        <a className="boxLink" href={`https://github.com/${propriedade.githubUser}`}>
-          @{propriedade.githubUser}
-        </a>
-      </p>
-      <hr />
+import { ProfileArea } from '../components/ProfileArea';
+import { AlurakutMenu } from '../components/AlurakutMenu';
 
-      <AlurakutProfileSidebarMenuDefault />
-    </Box>
-  )
-}
 
 function ProfileRelationsBox(propriedades) {
   return (
     <ProfileRelationsBoxWrapper>
       <h2 className="smallTitle">
-        {propriedades.title} ({propriedades.items.length})
+        {propriedades.title} ({propriedades.numeroSeguidores})
       </h2>
       <ul>
         {propriedades.items.map((itemAtual) => {
@@ -47,8 +33,8 @@ function ProfileRelationsBox(propriedades) {
 }
 
 export default function Home(props) {
-  const [comunidades ,setComunidades] = React.useState([])
-  const usuarioAleatorio = props.githubUser;
+  const [comunidades ,setComunidades] = useState([])
+  const githubUser = props.githubUser;
   const pessoasFavoritas = [
     'juunegreiros', 
     'omariosouto', 
@@ -57,16 +43,21 @@ export default function Home(props) {
     'marcobrunodev',
     'felipefialho',
   ];
-  const [seguidores, setSeguidores] = React.useState([]);
+  const [seguidores, setSeguidores] = useState([]);
+  const [numeroSeguidores, setNumeroSeguidores] = useState(0);
   
-  React.useEffect(function() {
-    fetch(`https://api.github.com/users/${props.githubUser}/followers`)
+  useEffect(function() {
+    fetch(`https://api.github.com/users/${props.githubUser}/followers?per_page=6`)
       .then(function (respostaDoServidor){
         return respostaDoServidor.json();
       })
       .then(function(respostaCompleta) {
         setSeguidores(respostaCompleta);
       });
+
+      fetch(`https://api.github.com/users/${props.githubUser}`)
+        .then((response) => response.json())
+        .then(({ followers }) => setNumeroSeguidores(followers));
 
       // API GraphQL 
       fetch('https://graphql.datocms.com/', {
@@ -94,11 +85,11 @@ export default function Home(props) {
 
   return (
     <>
-      <AlurakutMenu githubUser={usuarioAleatorio} />
+      <AlurakutMenu githubUser={githubUser} />
       <MainGrid>
-        <div className="profileArea" style={{gridArea: 'profileArea'}}>
-          <ProfileSideBar githubUser={usuarioAleatorio}/>
-        </div>
+
+        <ProfileArea user={githubUser}/>
+
         <div className="welcomeArea" style={{gridArea: 'welcomeArea'}}>
           <Box>
             <h1 className="title">
@@ -117,7 +108,7 @@ export default function Home(props) {
               const comunidade = {
                 title: dadosDoForm.get('title'),
                 imageUrl: dadosDoForm.get('image'),
-                creatorSlug: usuarioAleatorio,
+                creatorSlug: githubUser,
               }
 
               fetch('/api/comunidades', {
@@ -159,7 +150,7 @@ export default function Home(props) {
         </div>
         <div className="profileRelationsArea" style={{gridArea: 'profileRelationsArea'}}>
 
-          <ProfileRelationsBox title="Seguidores" items={seguidores}/>
+          <ProfileRelationsBox title="Seguidores" items={seguidores} numeroSeguidores={numeroSeguidores}/>
 
           <ProfileRelationsBoxWrapper>
             <h2 className="smallTitle">

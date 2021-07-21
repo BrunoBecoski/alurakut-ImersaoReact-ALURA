@@ -48,7 +48,7 @@ export const GlobalStyle = createGlobalStyle`
   }
   *::-webkit-scrollbar-thumb {
     background: #888; 
-    border-radius: 10px;
+    /* border-radius: 10px; */
   }
   *::-webkit-scrollbar-thumb:hover {
     background: #555; 
