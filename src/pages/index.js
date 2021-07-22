@@ -1,36 +1,12 @@
 import { useState, useEffect } from 'react';
 import nookies from 'nookies';
 import jwt from 'jsonwebtoken';
-import MainGrid from '../components/MainGrid';
-import Box from '../components/Box';
-import { OrkutNostalgicIconSet } from '../lib/AlurakutCommons';
-import { ProfileRelationsBoxWrapper } from '../components/ProfileRelations';
 
-import { ProfileArea } from '../components/ProfileArea';
 import { AlurakutMenu } from '../components/AlurakutMenu';
-
-
-function ProfileRelationsBox(propriedades) {
-  return (
-    <ProfileRelationsBoxWrapper>
-      <h2 className="smallTitle">
-        {propriedades.title} ({propriedades.numeroSeguidores})
-      </h2>
-      <ul>
-        {propriedades.items.map((itemAtual) => {
-          return (
-            <li key={itemAtual.id}>
-              <a href={`/users/${itemAtual.title}`} key={itemAtual.title}>
-                <img src={itemAtual.avatar_url} />
-                <span>{itemAtual.login}</span>
-              </a>
-            </li>
-          )
-        })}
-      </ul>
-    </ProfileRelationsBoxWrapper>
-  )
-}
+import { MainGrid } from '../components/MainGrid';
+import { ProfileArea } from '../components/ProfileArea';
+import { WelcomeArea } from '../components/WelcomeArea';
+import { ProfileRelationsArea } from '../components/ProfileRelationsArea'
 
 export default function Home(props) {
   const [comunidades ,setComunidades] = useState([])
@@ -48,12 +24,8 @@ export default function Home(props) {
   
   useEffect(function() {
     fetch(`https://api.github.com/users/${props.githubUser}/followers?per_page=6`)
-      .then(function (respostaDoServidor){
-        return respostaDoServidor.json();
-      })
-      .then(function(respostaCompleta) {
-        setSeguidores(respostaCompleta);
-      });
+      .then(respostaDoServidor => respostaDoServidor.json())
+      .then(respostaCompleta =>setSeguidores(respostaCompleta));
 
       fetch(`https://api.github.com/users/${props.githubUser}`)
         .then((response) => response.json())
@@ -77,119 +49,29 @@ export default function Home(props) {
         }`})
       })
       .then((response) => response.json())
-      .then((respostaCompleta) => {
-        const comunidadesVindasDoDato = respostaCompleta.data.allCommunities;
-        setComunidades(comunidadesVindasDoDato);
-      })
+      .then(({ data }) =>  setComunidades(data.allCommunities));
   }, []);
 
   return (
     <>
       <AlurakutMenu githubUser={githubUser} />
       <MainGrid>
+        <ProfileArea 
+          githubUser={githubUser}
+        />
 
-        <ProfileArea user={githubUser}/>
-
-        <div className="welcomeArea" style={{gridArea: 'welcomeArea'}}>
-          <Box>
-            <h1 className="title">
-              Bem Vindo
-            </h1>
-
-            <OrkutNostalgicIconSet />
-          </Box>
-
-          <Box>
-            <h2 className="subTitle">O que você deseja fazer?</h2>
-            <form onSubmit={function handleCriaComunidade(e) {
-              e.preventDefault();
-              const dadosDoForm = new FormData(e.target);
-
-              const comunidade = {
-                title: dadosDoForm.get('title'),
-                imageUrl: dadosDoForm.get('image'),
-                creatorSlug: githubUser,
-              }
-
-              fetch('/api/comunidades', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(comunidade)
-              })
-              .then(async (response) => {
-                const dados = await response.json();
-                const comunidade = dados.registroCriado;
-                const comunidadesAtualizadas = [...comunidades, comunidade];
-                setComunidades(comunidadesAtualizadas)
-              })
-            }}>
-              <div>
-                <input 
-                  placeholder="Qual vai ser o nome da sua comunidade?" 
-                  name="title" 
-                  aria-label="Qual vai ser o nome da sua comunidade?"
-                  type="text"
-                />
-              </div>
-              <div>
-                <input 
-                  placeholder="Coloque uma URL para usarmos de capa"
-                  name="image"
-                  aria-label="Coloque uma URL para usarmos de capa"
-                />
-              </div>
-
-              <button>
-                Criar comunidade
-              </button>
-
-            </form>
-          </Box>
-        </div>
-        <div className="profileRelationsArea" style={{gridArea: 'profileRelationsArea'}}>
-
-          <ProfileRelationsBox title="Seguidores" items={seguidores} numeroSeguidores={numeroSeguidores}/>
-
-          <ProfileRelationsBoxWrapper>
-            <h2 className="smallTitle">
-              Comunidades ({comunidades.length})
-            </h2>
-
-            <ul>
-              {comunidades.map((itemAtual) => {
-                return (
-                  <li key={itemAtual.id}>
-                    <a href={`/communities/${itemAtual.id}`}>
-                      <img src={itemAtual.imageUrl} />
-                      <span>{itemAtual.title}</span>
-                    </a>
-                  </li>
-                )
-              })}
-            </ul>
-          </ProfileRelationsBoxWrapper>
-
-          <ProfileRelationsBoxWrapper>
-            <h2 className="smallTitle">
-              Pessoas da comunidade ({pessoasFavoritas.length})
-            </h2>
-
-            <ul>
-              {pessoasFavoritas.map((itemAtual) => {
-                return (
-                  <li key={itemAtual}>
-                    <a href={`/users/${itemAtual}`} key={itemAtual}>
-                      <img src={`https://github.com/${itemAtual}.png`} />
-                      <span>{itemAtual}</span>
-                    </a>
-                  </li>
-                )
-              })}
-            </ul>
-          </ProfileRelationsBoxWrapper>
-        </div>
+        <WelcomeArea 
+          githubUser={githubUser} 
+          comunidades={comunidades}
+          setComunidades={setComunidades}
+        />
+        
+        <ProfileRelationsArea
+          seguidores={seguidores}
+          numeroSeguidores={numeroSeguidores}
+          comunidades={comunidades}
+          pessoasFavoritas={pessoasFavoritas}
+        />
       </MainGrid>
     </>
   );

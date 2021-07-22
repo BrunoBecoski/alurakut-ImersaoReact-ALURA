@@ -1,4 +1,4 @@
-import Box from '../Box';
+import { Box } from '../Box';
 import { Wrapper } from './styles';
 
 function ProfileSideBar({ githubUser }) {
@@ -53,10 +53,10 @@ function ProfileSideBar({ githubUser }) {
   )
 }
 
-export function ProfileArea({ user }) {
+export function ProfileArea({ githubUser }) {
   return (
     <div className="profileArea" style={{gridArea: 'profileArea'}}>
-      <ProfileSideBar githubUser={user}/>
+      <ProfileSideBar githubUser={githubUser}/>
     </div>
   )
 }
