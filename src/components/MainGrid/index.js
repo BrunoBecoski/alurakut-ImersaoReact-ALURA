@@ -6,10 +6,11 @@ import styled from 'styled-components';
   margin-left: auto;
   margin-right: auto;
   max-width: 500px;
-  padding: 16px;
+  padding: 8px 0;
 
   .profileArea {
     display: none;
+
     @media(min-width: 860px) {
       display: block;
     }
@@ -21,5 +22,6 @@ import styled from 'styled-components';
     grid-template-areas: 
       "profileArea welcomeArea profileRelationsArea";
     grid-template-columns: 160px 1fr 312px;
+    padding: 16px;
   }
 `;

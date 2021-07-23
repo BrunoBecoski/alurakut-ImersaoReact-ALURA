@@ -18,19 +18,19 @@ function ProfileSideBar({ githubUser }) {
 
       <Wrapper>
         <nav>
-          <a href="/">
+          <a href="/perfil">
             <img src={`http://alurakut.vercel.app/icons/user.svg`} />
               Perfil
             </a>
-          <a href="/">
+          <a href="/recados">
             <img src={`http://alurakut.vercel.app/icons/book.svg`} />
               Recados
             </a>
-          <a href="/">
+          <a href="/fotos">
             <img src={`http://alurakut.vercel.app/icons/camera.svg`} />
               Fotos
             </a>
-          <a href="/">
+          <a href="/depoimentos">
             <img src={`http://alurakut.vercel.app/icons/sun.svg`} />
               Depoimentos
             </a>
@@ -39,7 +39,7 @@ function ProfileSideBar({ githubUser }) {
         <hr />
 
         <nav>
-          <a href="/">
+          <a href="/githubtrends">
             <img src={`http://alurakut.vercel.app/icons/plus.svg`} />
               GitHub Trends
             </a>

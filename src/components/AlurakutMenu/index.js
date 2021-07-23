@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import NextLink from 'next/link';
 
-// import { AlurakutMenu as Header} from '../../lib/AlurakutCommons';
-
-import { Logo, Wrapper, ProfileSidebar } from './styles';
+import { Logo, Wrapper, ProfileSidebar, ProfileSidebarMenuDefault } from './styles';
 
 function Link({ href, children, ...props }) {
   return (
@@ -19,9 +17,7 @@ export function AlurakutMenu({ githubUser }) {
   const [isMenuOpen, setMenuState] = useState(false);
 
   return (
-
-    // <Header githubUser={'peas'}/>
-    <Wrapper>
+    <Wrapper isMenuOpen={isMenuOpen}>
       <div className="container">
         <Logo src={`http://alurakut.vercel.app/logo.svg`} />
 
@@ -47,47 +43,55 @@ export function AlurakutMenu({ githubUser }) {
           {!isMenuOpen && <img src={`http://alurakut.vercel.app/icons/menu-closed.svg`} />}
         </button>
       </div>
-      <ProfileSidebar>
+
+      <ProfileSidebar isMenuOpen={isMenuOpen}>
         <div className="alurakutMenuProfileSidebar">
           <div>
             <img src={`https://github.com/${githubUser}.png`} style={{ borderRadius: '8px' }} />
+            
             <hr />
+            
             <p>
               <a className="boxLink" href={`/user/${githubUser}`}>
                 @{githubUser}
               </a>
             </p>
+
             <hr />
 
-            <nav>
-              <a href="/">
-                <img src={`http://alurakut.vercel.app/icons/user.svg`} />
+            <ProfileSidebarMenuDefault>
+              <nav>
+                <a href="/perfil">
+                  <img src={`http://alurakut.vercel.app/icons/user.svg`} />
                   Perfil
                 </a>
-              <a href="/">
-                <img src={`http://alurakut.vercel.app/icons/book.svg`} />
+                <a href="/recados">
+                  <img src={`http://alurakut.vercel.app/icons/book.svg`} />
                   Recados
                 </a>
-              <a href="/">
-                <img src={`http://alurakut.vercel.app/icons/camera.svg`} />
+                <a href="/fotos">
+                  <img src={`http://alurakut.vercel.app/icons/camera.svg`} />
                   Fotos
                 </a>
-              <a href="/">
-                <img src={`http://alurakut.vercel.app/icons/sun.svg`} />
+                <a href="/depoimentos">
+                  <img src={`http://alurakut.vercel.app/icons/sun.svg`} />
                   Depoimentos
                 </a>
-            </nav>
-            <hr />
-            <nav>
-              <a href="/">
-                <img src={`http://alurakut.vercel.app/icons/plus.svg`} />
+              </nav>
+              
+              <hr />
+
+              <nav>
+                <a href="/githubtrends">
+                  <img src={`http://alurakut.vercel.app/icons/plus.svg`} />
                   GitHub Trends
                 </a>
-              <a href="/logout">
-                <img src={`http://alurakut.vercel.app/icons/logout.svg`} />
+                <a href="/logout">
+                  <img src={`http://alurakut.vercel.app/icons/logout.svg`} />
                   Sair
                 </a>
-            </nav>
+              </nav>
+            </ProfileSidebarMenuDefault>
           </div>
         </div>
       </ProfileSidebar>

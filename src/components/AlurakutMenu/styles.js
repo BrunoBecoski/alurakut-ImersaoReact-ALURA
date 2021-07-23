@@ -11,6 +11,9 @@ export const Wrapper = styled.header`
   width: 100%;
   background-color: #308BC5;
 
+  position: ${({ isMenuOpen }) => isMenuOpen ? 'fixed' : ''};
+  z-index: 10;
+
   .container {
     background-color: #308BC5;
     padding: 7px 16px;
@@ -86,6 +89,7 @@ export const Wrapper = styled.header`
 `;
 
 export const ProfileSidebar = styled.div`
+  overflow-y: scroll;
   background: white;
   position: fixed;
   z-index: 100;
@@ -124,5 +128,23 @@ export const ProfileSidebar = styled.div`
     margin-bottom: 8px;
     border-color: transparent;
     border-bottom-color: #ECF2FA;
+  }
+`;
+
+export const ProfileSidebarMenuDefault = styled.div`
+  a {
+    font-size: 12px;
+    color: #2E7BB4;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-decoration: none;
+
+    img {
+      width: 16px;
+      height: 16px;
+      margin-right: 5px; 
+    }
   }
 `;
