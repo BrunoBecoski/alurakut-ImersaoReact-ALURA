@@ -21,7 +21,7 @@ export default function Home(props) {
   ];
   const [seguidores, setSeguidores] = useState([]);
   const [numeroSeguidores, setNumeroSeguidores] = useState(0);
-  
+
   useEffect(function() {
     fetch(`https://api.github.com/users/${props.githubUser}/followers?per_page=6`)
       .then(respostaDoServidor => respostaDoServidor.json())

@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router'
 import NextLink from 'next/link';
+import nookies from 'nookies';
 
 import { Logo, Wrapper, ProfileSidebar, ProfileSidebarMenuDefault } from './styles';
 
@@ -13,8 +15,16 @@ function Link({ href, children, ...props }) {
   )
 }
 
+
 export function AlurakutMenu({ githubUser }) {
   const [isMenuOpen, setMenuState] = useState(false);
+
+  const router = useRouter();
+  
+  function handleLogout() {
+    nookies.destroy(null, 'USER_TOKEN');
+    router.push('/login');
+  }
 
   return (
     <Wrapper isMenuOpen={isMenuOpen}>
@@ -30,7 +40,7 @@ export function AlurakutMenu({ githubUser }) {
         </nav>
 
         <nav>
-          <a href={`/logout`}>
+          <a onClick={handleLogout}>
             Sair
           </a>
           <div>
@@ -86,7 +96,7 @@ export function AlurakutMenu({ githubUser }) {
                   <img src={`http://alurakut.vercel.app/icons/plus.svg`} />
                   GitHub Trends
                 </a>
-                <a href="/logout">
+                <a onClick={handleLogout}>
                   <img src={`http://alurakut.vercel.app/icons/logout.svg`} />
                   Sair
                 </a>

@@ -1,7 +1,17 @@
+import { useRouter } from 'next/router';
+import nookies from 'nookies';
+
 import { Box } from '../Box';
 import { Wrapper } from './styles';
 
-function ProfileSideBar({ githubUser }) {
+function ProfileSideBar({ githubUser, handleLogout }) {
+  const router = useRouter();
+
+  function handleLogout() {
+    nookies.destroy(null, 'USER_TOKEN');
+    router.push('/login');
+  }
+
   return (
     <Box as="aside">
       <img src={`https://github.com/${githubUser}.png`} style={{ borderRadius: '8px'}} />
@@ -43,7 +53,7 @@ function ProfileSideBar({ githubUser }) {
             <img src={`http://alurakut.vercel.app/icons/plus.svg`} />
               GitHub Trends
             </a>
-          <a href="/logout">
+          <a onClick={handleLogout}>
             <img src={`http://alurakut.vercel.app/icons/logout.svg`} />
               Sair
             </a>
