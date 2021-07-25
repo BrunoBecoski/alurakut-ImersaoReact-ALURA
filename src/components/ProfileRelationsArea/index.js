@@ -4,6 +4,7 @@ export function ProfileRelationsArea({
   seguidores,
   numeroSeguidores,
   comunidades,
+  numeroComunidades,
   pessoasFavoritas
 }) {
   return (
@@ -28,7 +29,7 @@ export function ProfileRelationsArea({
 
       <ProfileRelationsBoxWrapper>
         <h2 className="smallTitle">
-          Comunidades ({comunidades.length})
+          Comunidades ({numeroComunidades})
         </h2>
 
         <ul>

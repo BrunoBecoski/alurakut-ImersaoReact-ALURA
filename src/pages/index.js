@@ -9,7 +9,8 @@ import { WelcomeArea } from '../components/WelcomeArea';
 import { ProfileRelationsArea } from '../components/ProfileRelationsArea'
 
 export default function Home(props) {
-  const [comunidades ,setComunidades] = useState([])
+  const [comunidades ,setComunidades] = useState([]);
+  const [numeroComunidades, setNumeroComunidades] = useState(0);
   const githubUser = props.githubUser;
   const pessoasFavoritas = [
     'juunegreiros', 
@@ -40,7 +41,11 @@ export default function Home(props) {
           'Accept': 'application/json',
         },
         body: JSON.stringify({ "query": `query {
-          allCommunities {
+          _allCommunitiesMeta {
+            count
+          }
+          
+          allCommunities(first: 6) {
             title
             id
             imageUrl
@@ -49,7 +54,10 @@ export default function Home(props) {
         }`})
       })
       .then((response) => response.json())
-      .then(({ data }) =>  setComunidades(data.allCommunities));
+      .then(({ data }) =>  {
+        setNumeroComunidades(data._allCommunitiesMeta.count);
+        setComunidades(data.allCommunities);
+      });
   }, []);
 
   return (
@@ -70,6 +78,7 @@ export default function Home(props) {
           seguidores={seguidores}
           numeroSeguidores={numeroSeguidores}
           comunidades={comunidades}
+          numeroComunidades={numeroComunidades}
           pessoasFavoritas={pessoasFavoritas}
         />
       </MainGrid>
